@@ -10,21 +10,28 @@ public class P1291 {
 	public static List<Integer> sequentialDigits(int low, int high) {
 		ArrayList<Integer> a = new ArrayList<Integer>();
 		int seq = 123456789;
-		int l = 0;
-		loop:
-			while(l <= (int)(Math.log10(high)+1)) {
-				l = (int)(Math.log10(low)+1);
-				for(int i = (int)(low/(Math.pow(10, l-1))); i<= 10-l; i++) {
-					int x = (int)(seq%(Math.pow(10, 10-i))/(Math.pow(10, 10-l-i)));
-					if(x < low)
-						continue;
-					else if(x < high)
-						a.add(x);
-					else
-						break loop;
-				}
-				low = (int)Math.pow(10, l);
+		int l = (int)Math.log10(low)+1;
+		int h = (int)Math.log10(high)+1;
+		while(l <= h) {
+			int front = 1, back = 1;
+			for(int i = 0; i < 9-l; i++) {
+				front *= 10;
 			}
+			for(int i = 0; i < l; i++) {
+				back *= 10;
+			}
+			for(int i = 0; i <= 9-l; i++) {
+				int n = (seq/front)%back;
+				if(n >= low && n <= high) {
+					a.add(n);
+				}
+				else if(n > high) {
+					return a;
+				}
+				front /= 10;
+			}
+			l++;
+		}
 		return a;
 	}
 }
